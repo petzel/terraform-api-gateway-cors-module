@@ -17,19 +17,6 @@ PARAMS
   }
 }
 
-resource "aws_api_gateway_integration_response" "ResourceOptionsIntegrationResponse" {
-  rest_api_id = "${var.rest_api_id}"
-  resource_id = "${var.resource_id}"
-  http_method = "${aws_api_gateway_method.ResourceOptions.http_method}"
-  status_code = "200"
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-#    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS,GET,PUT,PATCH,DELETE'",
-    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,GET'",
-    "method.response.header.Access-Control-Allow-Origin" = "'*'"
-  }
-}
-
 resource "aws_api_gateway_method_response" "ResourceOptions200" {
   rest_api_id = "${var.rest_api_id}"
   resource_id = "${var.resource_id}"
@@ -41,4 +28,18 @@ resource "aws_api_gateway_method_response" "ResourceOptions200" {
     "method.response.header.Access-Control-Allow-Methods" = true,
     "method.response.header.Access-Control-Allow-Origin" = true
   }
+}
+
+resource "aws_api_gateway_integration_response" "ResourceOptionsIntegrationResponse" {
+  rest_api_id = "${var.rest_api_id}"
+  resource_id = "${var.resource_id}"
+  http_method = "${aws_api_gateway_method.ResourceOptions.http_method}"
+  status_code = "200"
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+#    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS,GET,PUT,PATCH,DELETE'",
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,GET'",
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
+  depends_on = [ "aws_api_gateway_method_response.ResourceOptions200" ]
 }
